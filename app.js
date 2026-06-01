@@ -1,4 +1,3 @@
- 
 // Load libraries
 const loadScript = (src) => {
   return new Promise((resolve, reject) => {
@@ -748,7 +747,7 @@ function setupSpeechRecognition() {
                       ? currentTargetWord 
                       : words[currentWordIndex];
 
-      transcript.innerHTML = `You said: "<strong>${result}</strong>" <span style="font-size: 0.8em; opacity: 0.7; animation: pulse 1s infinite;">(Listening...)</span><br>Target: <strong>${target.word}</strong> ${target.phonetic}`;
+      transcript.innerHTML = `You said: "<strong>${result}</strong>" <span style="font-size: 0.8em; opacity: 0.7; animation: pulse 1s infinite;">(Listening...)</span><br>Target: <strong>${target.word}</strong>`;
       transcriptBox.classList.remove('hidden');
       if (speechResultBar) {
         speechResultBar.classList.remove('hidden');
