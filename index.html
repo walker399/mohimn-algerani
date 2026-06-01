@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="English pronunciation tutor - learn pronunciation with AI">
+  <title>see your speach - English Pronunciation Tutor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="header">
+    <div class="header-content">
+      <button id="drawer-toggle" class="drawer-toggle" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="logo">
+        <div class="logo-icon">🎙</div>
+        <div>
+          <h1>see your speach</h1>
+          <p>AI-powered pronunciation tutor</p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Drawer Navigation -->
+  <div id="drawer" class="drawer hidden">
+    <div class="drawer-header">
+      <h3>Navigation</h3>
+      <button id="drawer-close" class="drawer-close-btn">&times;</button>
+    </div>
+    <nav class="drawer-nav">
+      <button class="drawer-link" data-page="practice">🎤 Practice</button>
+      <button class="drawer-link" data-page="spelling">✍️ How to Spell It</button>
+      <button class="drawer-link" data-page="test">📝 Test</button>
+      <button class="drawer-link" data-page="how-to">🗣 How to Say</button>
+    </nav>
+  </div>
+  <div id="drawer-overlay" class="drawer-overlay hidden"></div>
+
+  <!-- Page Dots -->
+  <div class="page-dots">
+    <button class="page-dot active" data-page="practice" title="Practice"></button>
+    <button class="page-dot" data-page="spelling" title="How to Spell It"></button>
+    <button class="page-dot" data-page="test" title="Test"></button>
+    <button class="page-dot" data-page="how-to" title="How to Say"></button>
+  </div>
+
+  <section class="hero">
+    <h2>Practice clear English pronunciation</h2>
+    <p>Track lips and jaw movement, recognize speech, and practice with your AI tutor.</p>
+  </section>
+
+  <main class="main">
+    <!-- ========== PRACTICE PAGE ========== -->
+    <div id="practice-page" class="page-content practice-card">
+      <h2 class="card-title">🎤 Practice Your Pronunciation</h2>
+
+      <!-- Search -->
+      <div class="dictionary">
+        <h3 class="section-label dictionary-label">Search any English word</h3>
+        <div class="dictionary-search-wrapper">
+          <div class="dictionary-search">
+            <input id="search-input" type="text" class="search-input" placeholder="Type a word like &quot;running&quot; or &quot;beautiful&quot;..." autocomplete="off" />
+            <button id="search-btn" class="btn btn-nav">Search</button>
+          </div>
+          <ul id="search-suggestions" class="search-suggestions hidden"></ul>
+        </div>
+        <div id="search-results" class="search-results hidden">
+          <div class="search-results-list" id="search-results-list"></div>
+        </div>
+        <div id="search-pronunciation" class="search-pronunciation hidden">
+          <div class="word-details-card">
+            <div class="word-details-header">
+              <h3 id="search-word" class="detail-word"></h3>
+            </div>
+            <div class="word-details-grid">
+              <div class="detail-item">
+                <span class="detail-label">Phonetic</span>
+                <span id="search-phonetic" class="detail-value phonetic-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Part of Speech</span>
+                <span id="search-pos" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Word Form / Tense</span>
+                <span id="search-tense" class="detail-value"></span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Syllables</span>
+                <span id="search-syllables" class="detail-value"></span>
+              </div>
+              <div class="detail-item detail-item-full">
+                <span class="detail-label">Meaning</span>
+                <span id="search-meaning" class="detail-value"></span>
+              </div>
+              <div id="search-forms-container" class="detail-item detail-item-full hidden">
+                <span class="detail-label">Word Forms</span>
+                <div id="search-forms" class="word-forms-list"></div>
+              </div>
+            </div>
+            <button id="practice-word-btn" class="btn btn-practice-word">Practice this word 🎯</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Camera -->
+      <div class="camera-controls">
+        <button id="camera-btn" class="btn btn-camera">Start lip tracking</button>
+      </div>
+      <p id="face-error" class="error-msg"></p>
+
+      <div class="video-section">
+        <h3 class="section-label">Face camera</h3>
+        <div class="video-wrapper">
+          <video id="video" class="camera-video" autoplay playsinline muted></video>
+          <div class="video-placeholder" id="video-placeholder">
+            <span>Click "Start lip tracking" to turn on the camera.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="lips-section">
+        <h3 class="section-label">Read the lips and jaw</h3>
+        <div class="lips-wrapper">
+          <canvas id="mouth-canvas"></canvas>
+          <span id="target-word" class="target-word"></span>
+        </div>
+        <p id="lips-status" class="lips-status hidden">Detecting face landmarks...</p>
+      </div>
+
+      <div class="speech-controls">
+<button id="speech-btn" class="btn btn-speech">Start speech</button>
+      </div>
+      <p id="speech-error" class="error-msg"></p>
+
+      <div id="transcript-box" class="transcript-box">
+<h4 class="section-label" style="margin-bottom:0.5rem;">Speech</h4>
+        <p id="transcript" class="transcript-placeholder">Say the word and it will appear here...</p>
+      </div>
+
+      <div class="lesson">
+        <p class="word"><span id="word"></span> <span id="phonetics" class="phonetics"></span></p>
+        <div id="speech-result-bar" class="speech-result-bar hidden"></div>
+        <p id="tip" class="tip"></p>
+        <p id="feedback-msg" class="feedback-msg"></p>
+      </div>
+
+      <div class="nav-buttons">
+        <button id="prev-btn" class="btn btn-nav">← Previous</button>
+        <button id="next-btn" class="btn btn-nav">Next →</button>
+      </div>
+    </div>
+
+    <!-- ========== HOW TO SPELL IT PAGE ========== -->
+    <div id="spelling-page" class="page-content practice-card hidden">
+      <h2 class="card-title">✍️ How to Spell It</h2>
+      <p class="page-subtitle">Read the word and practice spelling it correctly</p>
+
+      <div class="spelling-card">
+        <div class="spelling-word-display">
+          <h3 id="spelling-word-title" class="spelling-word-text"></h3>
+          <p id="spelling-phonetic-display" class="spelling-phonetic"></p>
+        </div>
+
+        <div class="spelling-breakdown" id="spelling-breakdown"></div>
+
+        <div class="spelling-input-section">
+          <label for="spelling-input" class="section-label">Type the word you see:</label>
+          <input id="spelling-input" type="text" class="search-input spelling-field" placeholder="Type the word..." />
+          <button id="spelling-check-btn" class="btn btn-speech">Check Spelling ✓</button>
+        </div>
+
+        <div id="spelling-feedback" class="spelling-feedback"></div>
+
+        <div class="nav-buttons">
+          <button id="spelling-prev-btn" class="btn btn-nav">← Previous Word</button>
+          <button id="spelling-next-btn" class="btn btn-nav">Next Word →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== TEST PAGE ========== -->
+    <div id="test-page" class="page-content practice-card hidden">
+      <h2 class="card-title">📝 Pronunciation Test</h2>
+      <p class="page-subtitle">Test your knowledge of phonetic transcriptions</p>
+
+      <div class="quiz-progress">
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+        <p id="progress-text" class="progress-text">Question 1 / 10</p>
+      </div>
+
+      <div class="quiz-card">
+        <div class="quiz-word-section">
+          <p id="quiz-text" class="quiz-question"></p>
+
+        </div>
+
+        <div id="quiz-options" class="quiz-options"></div>
+
+        <div id="quiz-feedback" class="quiz-feedback"></div>
+
+        <div class="quiz-actions">
+          <button id="next-question-btn" class="btn btn-speech hidden">Next Word →</button>
+        </div>
+
+        <div class="quiz-score-section hidden" id="quiz-score-section">
+          <div class="score-display">
+            <h3>Test Complete!</h3>
+            <p id="final-score" class="final-score"></p>
+          </div>
+          <button id="restart-quiz-btn" class="btn btn-speech">Restart Test 🔄</button>
+        </div>
+      </div>
+
+      <button id="back-practice-btn" class="btn btn-nav" style="margin-top: 1rem;">← Back to Practice</button>
+    </div>
+
+    <!-- ========== HOW TO SAY PAGE ========== -->
+    <div id="how-to-page" class="page-content practice-card hidden">
+      <h2 class="card-title">🗣 How to Say</h2>
+      <p class="page-subtitle">Search for any word and get pronunciation guidelines</p>
+
+      <div class="howto-search-section">
+        <div class="dictionary-search-wrapper">
+          <div class="dictionary-search">
+            <input id="howto-search-input" type="text" class="search-input" placeholder="Search a word to learn pronunciation..." autocomplete="off" />
+            <button id="howto-search-btn" class="btn btn-nav">Search</button>
+          </div>
+          <ul id="howto-suggestions" class="search-suggestions hidden"></ul>
+        </div>
+      </div>
+
+      <div id="howto-results" class="howto-results hidden">
+        <div class="howto-word-card">
+          <div class="howto-word-header">
+            <h3 id="howto-word" class="detail-word"></h3>
+            <span id="howto-phonetic" class="howto-phonetic-badge"></span>
+          </div>
+
+          <div class="howto-section">
+            <h4 class="howto-section-title">📖 Pronunciation Guidelines</h4>
+            <div id="howto-guidelines" class="howto-guidelines"></div>
+          </div>
+
+          <div class="howto-section">
+            <h4 class="howto-section-title">💡 Examples</h4>
+            <div id="howto-examples" class="howto-examples"></div>
+          </div>
+
+          <div class="howto-section">
+            <h4 class="howto-section-title">🎯 Practice Tips</h4>
+            <div id="howto-tips" class="howto-tips"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="howto-error" class="howto-error hidden"></div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>see your speach — AI Pronunciation Tutor · Practice with confidence</p>
+  </footer>
+
+  <!-- On-Screen Error Logger for Debugging -->
+  <div id="debug-error-box" style="position: fixed; bottom: 10px; right: 10px; width: 350px; max-height: 200px; overflow-y: auto; background: rgba(220, 38, 38, 0.9); color: white; padding: 10px; border-radius: 8px; z-index: 9999; font-family: monospace; font-size: 12px; display: none; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+    <strong style="display:block;margin-bottom:5px;border-bottom:1px solid rgba(255,255,255,0.3);padding-bottom:5px;">⚠️ Application Errors:</strong>
+    <div id="debug-error-content"></div>
+  </div>
+  <script>
+    function showDebugError(msg) {
+      const box = document.getElementById('debug-error-box');
+      const content = document.getElementById('debug-error-content');
+      box.style.display = 'block';
+      const p = document.createElement('p');
+      p.style.margin = '0 0 5px 0';
+      p.style.borderBottom = '1px solid rgba(255,255,255,0.2)';
+      p.style.paddingBottom = '3px';
+      p.textContent = msg;
+      content.appendChild(p);
+    }
+    window.addEventListener('error', function(e) {
+      showDebugError(e.message + ' at ' + e.filename + ':' + e.lineno);
+    });
+    window.addEventListener('unhandledrejection', function(e) {
+      showDebugError('Promise rejection: ' + (e.reason && e.reason.message ? e.reason.message : e.reason));
+    });
+  </script>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
