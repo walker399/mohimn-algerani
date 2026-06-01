@@ -1,4 +1,4 @@
- g
+ 
 // Load libraries
 const loadScript = (src) => {
   return new Promise((resolve, reject) => {
